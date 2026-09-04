@@ -1,0 +1,49 @@
+YEKATERINA FREEWARE LICENSE v1.0
+Copyright (c) 2026 Yekaterina project owner. All rights reserved.
+
+IMPORTANT: This software is proprietary freeware. It is NOT open source.
+
+1. LICENSE GRANT
+Subject to this License, you are granted a limited, non-exclusive, non-transferable, revocable license to download, install, and use the official unmodified Yekaterina Core binary free of charge for personal, educational, research, evaluation, and internal commercial purposes.
+
+2. NO SOURCE-CODE LICENSE
+No source code, source-code license, patent license beyond what is strictly necessary to use the distributed binary, or right to obtain source code is granted by this License.
+
+3. RESTRICTIONS
+Unless you have separate written permission from the copyright holder, you may not:
+(a) sell, sublicense, rent, lease, or commercially redistribute Yekaterina Core;
+(b) redistribute, mirror, bundle, repackage, or make the Yekaterina binary available to third parties;
+(c) modify, patch, tamper with, or create derivative binary distributions of Yekaterina;
+(d) reverse engineer, decompile, disassemble, or otherwise attempt to derive source code, except to the limited extent such restriction is expressly prohibited by applicable law;
+(e) remove or alter copyright, trademark, license, signature, integrity, or attribution notices;
+(f) represent an unofficial build, extension, DLC, or service as official or verified by Yekaterina.
+
+4. COMMERCIAL USE
+Using Yekaterina internally as part of a commercial activity is permitted. Distribution of Yekaterina itself, including bundling it with a commercial product or hosted redistribution of the binary, requires separate written permission unless a separate license expressly permits it.
+
+5. DLC AND EXTENSIONS
+Yekaterina DLCs, domain packs, extensions, datasets, verification packages, and related products may be offered under separate free or commercial licenses. This License does not grant rights to any separately licensed DLC or extension.
+
+6. THIRD-PARTY COMPONENTS
+Yekaterina may include or dynamically rely on third-party software components. Those components are licensed by their respective copyright holders under their own license terms. Applicable third-party notices supplied with an official release are part of the distribution and are not overridden by this License.
+
+7. TRADEMARKS AND BRANDING
+This License grants no right to use the Yekaterina name, logos, marks, or branding except as necessary to truthfully identify the software you are using.
+
+8. UPDATES AND SERVICES
+Updates, compatibility, support, DLC availability, hosted services, and future versions are not guaranteed unless separately agreed in writing.
+
+9. DISCLAIMER OF WARRANTY
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, YEKATERINA IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, NON-INFRINGEMENT, OR FITNESS FOR SAFETY-CRITICAL USE.
+
+10. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDER AND CONTRIBUTORS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR LOSS OF DATA, PROFITS, REVENUE, BUSINESS, OR USE, ARISING FROM OR RELATED TO YEKATERINA.
+
+11. ENGINEERING, SCIENTIFIC, FINANCIAL, AND OTHER RESULTS
+Yekaterina is a computational tool. Verification evidence applies to stated test suites and contracts and is not a guarantee that every result is correct for every input or suitable for a particular real-world decision. Users remain responsible for independent review where errors could cause material harm.
+
+12. TERMINATION
+Your rights under this License terminate automatically if you materially violate its terms. Upon termination, you must stop using and delete copies of Yekaterina in your possession or control, except where retention is required by law.
+
+13. ENTIRE LICENSE
+This License governs the official Yekaterina Core binary unless a different written license accompanies a particular release or product.

@@ -1,0 +1,14 @@
+# This is a public binary/documentation repository.
+*.exe
+*.dll
+*.pdb
+*.zip
+*.7z
+*.tar
+*.gz
+*.msi
+*.msix
+release_build/
+.tmp/
+.DS_Store
+Thumbs.db

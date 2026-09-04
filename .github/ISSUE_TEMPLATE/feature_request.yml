@@ -1,0 +1,27 @@
+name: DLC / feature request
+description: Suggest a domain, operation family, or compatibility improvement
+title: "[Request] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request type
+      options:
+        - DLC / domain pack
+        - Core compatibility fix
+        - Documentation
+        - Integration
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Request
+    validations:
+      required: true
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Why is this useful?
