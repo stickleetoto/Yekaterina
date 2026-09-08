@@ -2,11 +2,20 @@
 
 **Pure computation. Minimal tokens.**
 
-Yekaterina is a proprietary, free-to-use compute engine for LLM agents over MCP. The public repository is the official distribution, documentation, release-evidence, and issue-tracking home for Yekaterina. **The engine source code is not published here.**
+Yekaterina is a compute engine for LLM agents over MCP, designed to keep the LLM-facing interface small while allowing the internal computation layer to grow.
+
+This repository is the **stable distribution and documentation home** for Yekaterina.
+
+- Stable distribution: **v1.0.0**
+- Active source development: [stickleetoto/Yekaterina-Dev](https://github.com/stickleetoto/Yekaterina-Dev)
+- Stable MCP surface: **3 tools**
+- Stable v1.0 operation set: **1,215 operations**
+
+> The official stable binary distributed from this repository is governed by `LICENSE.txt`. The separate development-source repository has its own source license and development history.
 
 ## Yekaterina v1.0.0
 
-The V1 core is frozen as the first stable baseline.
+The V1 distribution is the first frozen stable baseline.
 
 | Metric | v1.0.0 |
 |---|---:|
@@ -29,19 +38,37 @@ Yekaterina exposes exactly three MCP tools:
 - `yk.spec` — inspect a selected operation
 - `yk.compute` — execute single calls, batches, pipelines, and supported user operations
 
-The design goal is that internal capability can grow without expanding the LLM-facing MCP tool surface.
+The design rule is simple:
+
+> Internal capability may grow without casually expanding the LLM-facing schema.
+
+## Stable distribution vs development
+
+Yekaterina uses two public repositories with different roles:
+
+```text
+stickleetoto/Yekaterina
+    └─ stable binaries, documentation, release evidence and issue tracking
+
+stickleetoto/Yekaterina-Dev
+    └─ Rust source development, optimization, verification and release preparation
+```
+
+The active development line is currently **v1.2.0**, with **1,387 registered operations** while preserving the same three-tool MCP surface and 412-token schema footprint.
+
+Development changes are promoted only after regression, compatibility and capability gates are checked against the frozen baselines.
 
 ## Download
 
-Official binaries are distributed through **GitHub Releases**. The initial supported release target is Windows x64.
+Official stable binaries are distributed through **GitHub Releases**.
 
-Download the latest release asset, verify its SHA-256 checksum, then point your stdio-capable MCP client at `yekaterina.exe`.
+Download the appropriate release asset, verify its SHA-256 checksum, then point your stdio-capable MCP client at `yekaterina.exe`.
 
 See [Installation](docs/INSTALLATION.md) and [MCP Setup](docs/MCP_SETUP.md).
 
 ## Verification evidence
 
-V1 passed:
+The stable V1 line passed:
 
 ```text
 Local verification                       PASS
@@ -60,20 +87,18 @@ Against the frozen alpha.10 baseline, capability increased from **1,054 to 1,215
 
 See [Verification](docs/VERIFICATION.md) and [Benchmarks](docs/BENCHMARKS.md).
 
-## Core and DLC
-
-**Yekaterina Core v1 is frozen.** New scientific, mathematical, engineering, financial, and other domain capability is intended to ship as separately versioned Yekaterina DLC / extension packages rather than continuously expanding the V1 core.
-
-See [DLC model](docs/DLC.md).
+For current development verification, concurrency work and the v1.2 operation expansion, see [Yekaterina-Dev](https://github.com/stickleetoto/Yekaterina-Dev).
 
 ## License
 
-Yekaterina Core is **freeware, not open source**. You may use the official binary under the [Yekaterina Freeware License v1.0](LICENSE.txt). Source code rights are not granted.
+The official Yekaterina Core binary distributed from this repository is provided under the [Yekaterina Freeware License v1.0](LICENSE.txt).
 
-Third-party components bundled in official binary releases retain their own licenses. Official release archives should include a component inventory and applicable third-party license texts.
+The development-source repository is distributed separately under its own license. The two repositories should not be assumed to have identical distribution terms.
+
+Third-party components bundled in official binary releases retain their own licenses. Official release archives should include the applicable component inventory and third-party notices.
 
 ## Security
 
-V1 computation operations do not expose arbitrary shell execution, arbitrary network access, or arbitrary filesystem access as compute operations. Formula evaluation and workload execution use bounded internal guards.
+Yekaterina compute operations do not expose arbitrary shell execution, arbitrary network access, or arbitrary filesystem access as compute operations. Formula evaluation and workload execution use bounded internal guards.
 
 For vulnerability reporting, see [SECURITY.md](SECURITY.md).
