@@ -11,7 +11,10 @@ $project = (Resolve-Path $CargoProjectPath).Path
 $cargoToml = Join-Path $project "Cargo.toml"
 $cargoLock = Join-Path $project "Cargo.lock"
 if (!(Test-Path $cargoToml)) { throw "Cargo.toml not found: $cargoToml" }
-if (!(Test-Path $cargoLock)) { throw "Cargo.lock not found. Run the verified V1 build first: $cargoLock" }
+if (!(Test-Path $cargoLock)) { throw "Cargo.lock not found. Build from the verified locked source tree first: $cargoLock" }
+
+$releaseNotes = Join-Path $root ("releases\v{0}\RELEASE_NOTES.md" -f $Version)
+if (!(Test-Path $releaseNotes)) { throw "Release notes not found for v$Version: $releaseNotes" }
 
 $dest = Join-Path (Resolve-Path (New-Item -ItemType Directory -Force $OutDir)).Path "Yekaterina_v${Version}_windows-x64"
 if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
@@ -20,7 +23,7 @@ New-Item -ItemType Directory -Force (Join-Path $dest "third_party_licenses") | O
 Copy-Item $exe (Join-Path $dest "yekaterina.exe")
 Copy-Item (Join-Path $root "LICENSE.txt") $dest
 Copy-Item (Join-Path $root "PRIVACY.md") $dest
-Copy-Item (Join-Path $root "releases\v1.0.0\RELEASE_NOTES.md") $dest
+Copy-Item $releaseNotes $dest
 Copy-Item (Join-Path $root "SMOKE_TEST_WINDOWS.bat") $dest
 Copy-Item -Recurse (Join-Path $root "tools") $dest
 
