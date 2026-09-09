@@ -1,34 +1,51 @@
 # Yekaterina
 
-**Pure computation. Minimal tokens.**
+**Pure computation. Minimal tokens. Verified evolution.**
 
-Yekaterina is a compute engine for LLM agents over MCP, designed to keep the LLM-facing interface small while allowing the internal computation layer to grow.
+Yekaterina is a compute engine for LLM agents over MCP, designed to keep the model-facing interface small while the internal deterministic computation layer grows.
 
 This repository is the **stable distribution and documentation home** for Yekaterina.
 
-- Stable distribution: **v1.0.0**
+- Stable distribution: **v1.2.0**
 - Active source development: [stickleetoto/Yekaterina-Dev](https://github.com/stickleetoto/Yekaterina-Dev)
 - Stable MCP surface: **3 tools**
-- Stable v1.0 operation set: **1,215 operations**
+- Stable operation set: **1,410 operations**
+- MCP schema footprint: **412 tokens / 1,725 bytes**
 
-> The official stable binary distributed from this repository is governed by `LICENSE.txt`. The separate development-source repository has its own source license and development history.
+> Official stable binaries distributed from this repository are governed by `LICENSE.txt`. The separate development-source repository has its own source license and development history.
 
-## Yekaterina v1.0.0
+## Yekaterina v1.2.0
 
-The V1 distribution is the first frozen stable baseline.
+v1.2.0 promotes the verified v1.2 release-candidate line to stable while preserving the compact MCP interface.
 
-| Metric | v1.0.0 |
+| Metric | v1.2.0 |
 |---|---:|
-| Registered compute/control opcodes | **1,215** |
+| Registered built-in/control operations | **1,410** |
 | Exposed MCP tools | **3** |
-| Golden correctness cases | **527/527 (100%)** |
-| Live `yk.spec` coverage | **1,215/1,215** |
-| Live MCP execution fixtures | **1,215/1,215** |
-| Clean replay / return-type contract | **1,215/1,215** |
-| Schema tokens | **412** |
-| Fixed 10k workload wire tokens | **159,794** |
+| MCP schema footprint | **412 tokens / 1,725 bytes** |
+| Golden correctness corpus | **527/527** |
+| Full Capability Audit | **1,410/1,410** |
+| Rust test executions | **386 / 0 failures** |
+| Error codes | **30** |
+| Default workers | **1** |
+| Crate version | **1.2.0** |
+| MCP advertised version | **1.0.0** (deliberately frozen) |
 
-The 1,215/1,215 Full Capability Audit establishes that every registered opcode was exercised through the live MCP interface and matched its declared return-type contract. It does **not** mean every operation is mathematically proven correct for every possible input.
+The promoted source point is `stickleetoto/Yekaterina-Dev@9019194af02f7b9cbe72c5a232e753e236a84b4f`.
+
+The Full Capability Audit establishes that every registered opcode was exercised through the live MCP interface and matched its declared return-type contract. It does **not** claim mathematical proof for every possible input.
+
+## What's new in v1.2
+
+The stable operation set grows from **1,215 to 1,410** without increasing the three-tool MCP surface.
+
+The v1.2 line adds:
+
+- exact and applied families across `int`, `dec`, `geo`, `fin`, `vec`, `unit`, and `pct`;
+- statistical inference, distributions, tests, confidence intervals, and regression diagnostics;
+- multiplicity corrections, post-hoc testing, effect sizes, and risk measures;
+- ordered parallel batch infrastructure from the v1.1 performance line;
+- a fix for the v1.1 `expr.eval` worker-classification defect.
 
 ## MCP surface
 
@@ -38,9 +55,33 @@ Yekaterina exposes exactly three MCP tools:
 - `yk.spec` — inspect a selected operation
 - `yk.compute` — execute single calls, batches, pipelines, and supported user operations
 
-The design rule is simple:
+The design rule remains:
 
 > Internal capability may grow without casually expanding the LLM-facing schema.
+
+Operation discovery stays out of `tools/list`, so the registry can grow without forcing every operation into the model-visible tool schema.
+
+## Verification evidence
+
+The source promoted to v1.2.0 completed the end-to-end v1.2 CI successfully:
+
+```text
+static_audit_v12                         24 pass / 0 fail
+rc_gate                                  PASS
+Rust tests                               386 / 0 failures
+cargo clippy                             PASS
+verify_v12_operations                    164 assertions
+verify_statistics                        961 reference checks
+verify_multiplicity                      577 assertions
+MCP Golden                               527/527
+Full Capability Audit                    1410/1410 --strict
+MCP showcase demo                        DEMO PASS
+mutation gates                           6/6 caught
+```
+
+The Windows stable package is built from the exact promoted source commit with the committed lockfile, run through the real MCP demo, packaged with release/license/privacy and dependency-inventory material, and accompanied by a SHA-256 checksum.
+
+See [v1.2.0 release notes](releases/v1.2.0/RELEASE_NOTES.md) for the promotion record.
 
 ## Stable distribution vs development
 
@@ -54,40 +95,21 @@ stickleetoto/Yekaterina-Dev
     └─ Rust source development, optimization, verification and release preparation
 ```
 
-The active development line is currently **v1.2.0**, with **1,387 registered operations** while preserving the same three-tool MCP surface and 412-token schema footprint.
-
 Development changes are promoted only after regression, compatibility and capability gates are checked against the frozen baselines.
 
 ## Download
 
 Official stable binaries are distributed through **GitHub Releases**.
 
-Download the appropriate release asset, verify its SHA-256 checksum, then point your stdio-capable MCP client at `yekaterina.exe`.
+Download `Yekaterina_v1.2.0_windows-x64.zip` together with its `.sha256.txt` file, verify the checksum, then point your stdio-capable MCP client at `yekaterina.exe`.
 
 See [Installation](docs/INSTALLATION.md) and [MCP Setup](docs/MCP_SETUP.md).
 
-## Verification evidence
+## Compatibility
 
-The stable V1 line passed:
+The MCP request-schema surface remains compatible with the frozen v1.0.0 line. The server's MCP `initialize` response still advertises `1.0.0` deliberately; crate/release versioning can evolve without silently changing what existing MCP clients observe.
 
-```text
-Local verification                       PASS
-MCP Golden                               527/527 (100%)
-MCP tools                                3
-Opcode enumeration                       1215/1215
-Live yk.spec coverage                    1215/1215
-Full Audit fixture coverage              1215/1215
-Clean replay / return-type contract      1215/1215
-Golden oracle                            100%
-Self-regression hard gate                PASS
-Self-regression verdict                  CURRENT WINS
-```
-
-Against the frozen alpha.10 baseline, capability increased from **1,054 to 1,215 (+15.28%)** while the 3-tool surface, **412 schema tokens**, and fixed 10k workload **159,794 wire tokens** remained unchanged.
-
-See [Verification](docs/VERIFICATION.md) and [Benchmarks](docs/BENCHMARKS.md).
-
-For current development verification, concurrency work and the v1.2 operation expansion, see [Yekaterina-Dev](https://github.com/stickleetoto/Yekaterina-Dev).
+Parallel batch execution is opt-in. The default worker count remains 1.
 
 ## License
 
@@ -95,7 +117,7 @@ The official Yekaterina Core binary distributed from this repository is provided
 
 The development-source repository is distributed separately under its own license. The two repositories should not be assumed to have identical distribution terms.
 
-Third-party components bundled in official binary releases retain their own licenses. Official release archives should include the applicable component inventory and third-party notices.
+Third-party components bundled in official binary releases retain their own licenses. Official release archives include the applicable component inventory and collected third-party license material.
 
 ## Security
 
