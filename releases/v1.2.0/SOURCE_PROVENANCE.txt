@@ -1,0 +1,11 @@
+Yekaterina v1.2.0 stable promotion source
+
+Development repository: stickleetoto/Yekaterina-Dev
+Source commit: 9019194af02f7b9cbe72c5a232e753e236a84b4f
+Source prerelease tag: v1.2.0-rc1
+Source CI: completed / success
+Golden: 527/527
+Full Capability Audit: 1410/1410 --strict
+MCP tools: 3
+MCP schema footprint: 412 tokens / 1725 bytes
+Stable operation count: 1410
