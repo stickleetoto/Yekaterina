@@ -1,6 +1,7 @@
 name: promote-v1.2.0
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 
@@ -9,7 +10,7 @@ permissions:
 
 jobs:
   windows-release:
-    if: github.event.head_commit.message == 'release: promote Yekaterina v1.2.0 stable'
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'release: promote Yekaterina v1.2.0 stable'
     runs-on: windows-latest
     steps:
       - name: Checkout stable distribution repository
