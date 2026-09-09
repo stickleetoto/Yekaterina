@@ -14,7 +14,7 @@ if (!(Test-Path $cargoToml)) { throw "Cargo.toml not found: $cargoToml" }
 if (!(Test-Path $cargoLock)) { throw "Cargo.lock not found. Build from the verified locked source tree first: $cargoLock" }
 
 $releaseNotes = Join-Path $root ("releases\v{0}\RELEASE_NOTES.md" -f $Version)
-if (!(Test-Path $releaseNotes)) { throw "Release notes not found for v$Version: $releaseNotes" }
+if (!(Test-Path $releaseNotes)) { throw "Release notes not found for v${Version}: $releaseNotes" }
 
 $dest = Join-Path (Resolve-Path (New-Item -ItemType Directory -Force $OutDir)).Path "Yekaterina_v${Version}_windows-x64"
 if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
