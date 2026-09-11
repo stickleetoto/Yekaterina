@@ -1,0 +1,15 @@
+Yekaterina v1.3.0 stable promotion source
+
+Development repository: stickleetoto/Yekaterina-Dev
+Source commit: 6955d707c63efccdcf721e8369462cea9ee8d965
+Source branch: main
+Source CI: completed / success
+Transformer Candidate workflow: completed / success
+Golden regression: 527/527
+Frozen v1.2 Full Capability Audit: 1410/1410 --strict
+Aggregate operation count: 1425
+Native transformer operation count: 15
+MCP tools: 3
+MCP schema footprint: 412 tokens / 1725 bytes
+Crate version: 1.3.0
+MCP advertised version: 1.0.0
