@@ -1,38 +1,42 @@
-# Yekaterina v1.2.0 verification evidence
+# Yekaterina v1.3.0 verification evidence
 
 Promoted source point:
 
-`stickleetoto/Yekaterina-Dev@9019194af02f7b9cbe72c5a232e753e236a84b4f`
+`stickleetoto/Yekaterina-Dev@6955d707c63efccdcf721e8369462cea9ee8d965`
 
 Recorded acceptance result:
 
 ```text
-static_audit_v12                         24 pass / 0 fail
-rc_gate                                  PASS
-Rust tests                               386 / 0 failures
-cargo clippy                             PASS
-verify_v12_operations                    164 assertions
-verify_statistics                        961 reference checks
-verify_multiplicity                      577 assertions
-MCP Golden                               527/527
-MCP tools                                3
-Registered operations                    1410
-Full Capability Audit                    1410/1410 --strict
-MCP showcase demo                        DEMO PASS
-mutation gates                           6/6 caught
+static_audit_v13                         PASS
+aggregate operation manifest             1425 total / 15 xfmr
+cargo test --locked --all-targets         PASS
+cargo clippy --locked --all-targets       PASS
+cargo build --locked --release            PASS
+MCP showcase demo                         PASS
+transformer runtime verifier              PASS
+v1.2 independent operation verifier       PASS
+statistics reference verifier             PASS
+multiplicity reference verifier           PASS
+MCP Golden                                527/527
+MCP tools                                 3
+Registered operations                    1425
+Frozen v1.2 Full Capability Audit         1410/1410 --strict
+benchmark invariants                      PASS
 ```
 
-The promoted development commit completed the end-to-end GitHub CI successfully before stable packaging.
+The promoted development commit completed both the transformer-candidate workflow and the end-to-end main CI successfully after merge to `Yekaterina-Dev/main`.
 
 ## Interpretation
 
-`1410/1410` Full Capability Audit means every registered opcode was discovered and executed through the live MCP boundary using a valid fixture and matched its declared return-type contract.
+The v1.3 release intentionally preserves the frozen **1,410/1,410** v1.2 Full Capability Audit as historical evidence rather than rewriting that baseline. The 15 new transformer-native operations are separately covered by the v1.3 aggregate registry/engine tests and the real-process transformer runtime verifier.
 
-It is **not** a proof that every mathematical result is correct for every possible input. Mathematical correctness is additionally covered by the Golden suite, Rust tests, independent Python reference checks, edge-case hardening, and domain-specific validation performed during development.
+This evidence is not a proof that every mathematical result is correct for every possible input. Mathematical correctness is additionally covered by the Golden suite, Rust tests, independent Python reference checks, edge-case hardening, and domain-specific validation performed during development.
 
 ## Compatibility evidence
 
-v1.2.0 preserves exactly three MCP tools and the measured **412-token / 1,725-byte** model-facing schema footprint. The MCP `initialize` advertised version remains `1.0.0` deliberately for client compatibility even though the release/crate version is `1.2.0`.
+v1.3.0 preserves exactly three MCP tools and the **412-token / 1,725-byte** model-facing schema footprint. The MCP `initialize` advertised version remains `1.0.0` deliberately for client compatibility even though the release/crate version is `1.3.0`.
+
+Every v1.2 canonical operation remains present in the original order. The default worker count remains 1 and the existing request schema and error vocabulary are unchanged.
 
 ## Packaging evidence
 
