@@ -46,8 +46,8 @@ def main() -> int:
     opcodes = manifest["opcodes"]
     fixtures = fixtures_doc["fixtures"]
     assert manifest.get("registry_status") == "registered"
-    assert manifest.get("count") == 2 == len(opcodes)
-    assert fixtures_doc.get("count") == 2
+    assert manifest.get("count") == 4 == len(opcodes)
+    assert fixtures_doc.get("count") == 4
     assert set(fixtures) == set(opcodes)
 
     with StdioMcpClient(sys.argv[1], timeout=20.0) as client:
@@ -78,11 +78,38 @@ def main() -> int:
         if singular.get("e") != "DOMAIN":
             raise AssertionError(f"singular linear system should return DOMAIN: {singular!r}")
 
+        proportion = decode(client.tool_call(
+            "yk.compute", {"op": "alg.proportion", "a": [2, 5, 8]}
+        ))
+        approx(float(proportion["r"]), 20.0)
+        invalid_proportion = decode(client.tool_call(
+            "yk.compute", {"op": "alg.proportion", "a": [0, 5, 8]}
+        ))
+        if invalid_proportion.get("e") != "DOMAIN":
+            raise AssertionError(f"zero proportion divisor should return DOMAIN: {invalid_proportion!r}")
+
+        sigfig = decode(client.tool_call(
+            "yk.compute", {"op": "num.round_sigfig", "a": [1234.567, 3]}
+        ))
+        approx(float(sigfig["r"]), 1230.0)
+        sigfig_small = decode(client.tool_call(
+            "yk.compute", {"op": "num.round_sigfig", "a": [0.012345, 3]}
+        ))
+        approx(float(sigfig_small["r"]), 0.0123)
+        invalid_sigfig = decode(client.tool_call(
+            "yk.compute", {"op": "num.round_sigfig", "a": [12.3, 0]}
+        ))
+        if invalid_sigfig.get("e") != "DOMAIN":
+            raise AssertionError(f"zero significant figures should return DOMAIN: {invalid_sigfig!r}")
+
         # Agent-friendly search: natural language resolves to the intended op
         # without adding a fourth MCP tool or changing request schemas.
         expected_search = {
             "solve linear equation": "alg.linear_root",
             "system of equations": "linalg.solve",
+            "solve proportion": "alg.proportion",
+            "rule of three": "alg.proportion",
+            "round to significant figures": "num.round_sigfig",
             "quadratic equation": "alg.quadratic_roots",
             "greatest common divisor": "alg.gcd_many",
             "matrix inverse": "mat.inverse",
@@ -103,7 +130,7 @@ def main() -> int:
             raise AssertionError(f"v1.3 transformer dispatch regressed: {xfmr!r}")
 
     print("V1.4 MATH + AGENT RUNTIME PASS")
-    print("new math operations: 2/2")
+    print("new math operations: 4/4")
     print("natural-language yk.find intents: PASS")
     print("legacy alias ownership: PASS")
     print("v1.3 transformer regression: PASS")
