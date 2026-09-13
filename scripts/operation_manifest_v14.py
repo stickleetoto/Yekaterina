@@ -30,8 +30,8 @@ if v14_manifest.get("registry_status") != "registered" or v14_manifest.get("opco
     raise SystemExit(f"FAIL: v1.4 registry/manifest mismatch: {v14_ops}")
 
 ops = v12_ops + v13_ops + v14_ops
-if len(ops) != 1427 or len(set(ops)) != 1427:
-    raise SystemExit(f"FAIL: aggregate registry is {len(ops)} entries / {len(set(ops))} unique, expected 1427")
+if len(ops) != 1429 or len(set(ops)) != 1429:
+    raise SystemExit(f"FAIL: aggregate registry is {len(ops)} entries / {len(set(ops))} unique, expected 1429")
 
 counts = Counter(op.split('.', 1)[0] for op in ops)
 print(f"total={len(ops)}")
