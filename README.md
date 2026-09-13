@@ -1,11 +1,18 @@
-# Yekaterina-Dev
+# Yekaterina — Development
 
-Development repository for Yekaterina.
+Active source-development branch for Yekaterina.
+
+This branch is the successor to the former `stickleetoto/Yekaterina-Dev` repository. The former repository is retained as migration provenance while the consolidated layout is validated.
+
+## Repository layout
+
+- Stable distribution and release documentation: [`main`](https://github.com/stickleetoto/Yekaterina/tree/main) — **v1.3.0**.
+- Active source development: **`dev/v1.4` — Core Math + Agent Usability**.
+- Development source license: **Apache License 2.0** (`LICENSE` on this branch).
+- Stable binary distribution uses its separate `LICENSE.txt` on `main`.
 
 ## Status
 
-- Stable distribution: `stickleetoto/Yekaterina` is **v1.3.0**.
-- Active development line: **v1.4 — Core Math + Agent Usability**.
 - Development package metadata remains **1.3.0** until an explicit v1.4 release-promotion phase.
 - Live v1.4 built-in/control operation surface: **1,427 operations**.
 - v1.3 baseline retained: **1,425 operations**, including **15** native `xfmr.*` operations.
