@@ -4,15 +4,15 @@
 
 Yekaterina is a compute engine for LLM agents over MCP, designed to keep the model-facing interface small while the internal deterministic computation layer grows.
 
-This repository is the **stable distribution and documentation home** for Yekaterina.
+This repository is the **stable distribution, documentation, and active development home** for Yekaterina.
 
-- Stable distribution: **v1.3.0**
-- Active source development: [stickleetoto/Yekaterina-Dev](https://github.com/stickleetoto/Yekaterina-Dev)
+- Stable distribution: **v1.3.0** on `main`
+- Active source development: [`dev/v1.4`](https://github.com/stickleetoto/Yekaterina/tree/dev/v1.4)
 - Stable MCP surface: **3 tools**
 - Stable operation set: **1,425 operations**
 - MCP schema footprint: **412 tokens / 1,725 bytes**
 
-> Official stable binaries distributed from this repository are governed by `LICENSE.txt`. The separate development-source repository has its own source license and development history.
+> Official stable binaries distributed from `main` are governed by `LICENSE.txt`. Development source on `dev/v1.4` is distributed under the Apache License 2.0 in that branch's `LICENSE` file. Branches intentionally have different distribution terms.
 
 ## Yekaterina v1.3.0
 
@@ -31,7 +31,7 @@ v1.3.0 promotes the verified transformer-native expansion to stable while preser
 | Crate version | **1.3.0** |
 | MCP advertised version | **1.0.0** (deliberately frozen) |
 
-The promoted source point is `stickleetoto/Yekaterina-Dev@6955d707c63efccdcf721e8369462cea9ee8d965`.
+The v1.3 release was originally promoted from the former `stickleetoto/Yekaterina-Dev` repository at commit `6955d707c63efccdcf721e8369462cea9ee8d965`. That provenance remains part of the release record; active development has since been consolidated into this repository.
 
 The v1.3 release preserves the frozen 1,410-operation v1.2 registry and engine as historical audit baselines, then exposes a live aggregate registry of 1,425 operations through v1.3 dispatch shims. The original v1.2 Full Capability Audit remains frozen evidence; the 15 new transformer-native operations are additionally exercised by the v1.3 real-process runtime verifier.
 
@@ -89,17 +89,17 @@ See [v1.3.0 release notes](releases/v1.3.0/RELEASE_NOTES.md) for the promotion r
 
 ## Stable distribution vs development
 
-Yekaterina uses two public repositories with different roles:
+Yekaterina now uses one public repository with branch-separated roles:
 
 ```text
 stickleetoto/Yekaterina
-    └─ stable binaries, documentation, release evidence and issue tracking
-
-stickleetoto/Yekaterina-Dev
-    └─ Rust source development, optimization, verification and release preparation
+    ├─ main
+    │   └─ stable binaries, documentation, release evidence and issue tracking
+    └─ dev/v1.4
+        └─ Rust source development, optimization, verification and release preparation
 ```
 
-Development changes are promoted only after regression, compatibility and capability gates are checked against the frozen baselines.
+Development changes are promoted from the development branch only after regression, compatibility and capability gates are checked against the frozen baselines. The former `stickleetoto/Yekaterina-Dev` repository is retained as migration provenance while the consolidated layout is validated.
 
 ## Download
 
@@ -117,9 +117,9 @@ Every v1.2 canonical operation remains present in its original order. The defaul
 
 ## License
 
-The official Yekaterina Core binary distributed from this repository is provided under the [Yekaterina Freeware License v1.0](LICENSE.txt).
+The official Yekaterina Core binary distributed from `main` is provided under the [Yekaterina Freeware License v1.0](LICENSE.txt).
 
-The development-source repository is distributed separately under its own license. The two repositories should not be assumed to have identical distribution terms.
+Development source on [`dev/v1.4`](https://github.com/stickleetoto/Yekaterina/tree/dev/v1.4) is distributed under the Apache License 2.0 provided by that branch's `LICENSE` file. Do not assume the stable binary distribution and development source have identical distribution terms.
 
 Third-party components bundled in official binary releases retain their own licenses. Official release archives include the applicable component inventory and collected third-party license material.
 
