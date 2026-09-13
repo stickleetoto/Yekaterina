@@ -36,5 +36,7 @@ mod tests {
             ).unwrap(),
             json!([2.0, 1.0])
         );
+        assert_eq!(execute("rule_of_three", &[json!(2), json!(5), json!(8)]).unwrap(), json!(20.0));
+        assert_eq!(execute("sigfig_round", &[json!(1234.567), json!(3)]).unwrap(), json!(1230.0));
     }
 }
