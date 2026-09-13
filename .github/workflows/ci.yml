@@ -1,0 +1,67 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.98.0
+        with:
+          components: rustfmt, clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install 'tiktoken>=0.7'
+      # scipy, numpy and mpmath are the independent references the
+      # statistical operations are checked against. They are not runtime
+      # dependencies: the engine has none beyond its Rust crates.
+      - run: pip install 'scipy>=1.11' 'numpy>=1.26' 'mpmath>=1.3' 'statsmodels>=0.14'
+
+      # v1.4 is additive over the frozen v1.3 release layer. The v1.4 audit
+      # preserves the v1.2 integrity baseline, pins the final v1.3 shim files,
+      # and verifies the 1,427-op aggregate surface plus unchanged 3-tool MCP.
+      - run: python scripts/static_audit_v14.py
+      - run: python scripts/lexical_rust_audit.py
+      - run: python scripts/operation_manifest_v14.py
+      # These retain the complete frozen v1.2 source/fixture coverage.
+      - run: python scripts/validate_golden_manifest.py
+      - run: python scripts/validate_full_audit.py
+
+      # Early v1.4 development keeps package metadata at 1.3.0 until an
+      # explicit release-promotion phase. The dependency graph remains locked.
+      - run: cargo test --locked --all-targets
+      - run: cargo clippy --locked --all-targets
+      - run: cargo build --locked --release
+
+      # Existing three-tool MCP demo and v1.3 transformer runtime gate stay live.
+      - run: python tools/demo.py ./target/release/yekaterina
+      - run: python scripts/verify_v13_transformer_runtime.py ./target/release/yekaterina
+      # v1.4 gate: new equation solvers plus natural-language yk.find ranking.
+      - run: python scripts/verify_v14_math_agent_runtime.py ./target/release/yekaterina
+
+      # Frozen v1.2 reference/acceptance suite remains a regression layer.
+      - run: python scripts/verify_v12_operations.py
+      - run: python scripts/verify_statistics.py
+      - run: python scripts/verify_multiplicity.py
+      - run: python golden/run_golden.py --exe ./target/release/yekaterina --out ./golden_results/ci
+      - run: python scripts/check_golden_result.py ./golden_results/ci/result.json
+      - run: python full_audit/run_full_audit.py --exe ./target/release/yekaterina --out ./full_audit_results/ci --strict
+
+      # Timing-independent benchmark invariants remain the same three-tool MCP
+      # schema, deterministic responses, and bounded error envelopes.
+      - run: python bench/run_bench.py --exe ./target/release/yekaterina --out ./bench_results/ci --runs 2 --cold-reps 3 --label "ci"
+
+      - name: Upload verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-reports
+          path: |
+            golden_results/ci/
+            full_audit_results/ci/
+            bench_results/ci/
+          if-no-files-found: ignore
