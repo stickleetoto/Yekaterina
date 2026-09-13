@@ -9,7 +9,7 @@ use crate::registry_v13 as legacy;
 pub use legacy::{OperationSource, OperationSpec};
 
 pub const V13_BUILTIN_COUNT: usize = 1425;
-pub const V14_MATH_COUNT: usize = 2;
+pub const V14_MATH_COUNT: usize = 4;
 pub const BUILTIN_COUNT: usize = V13_BUILTIN_COUNT + V14_MATH_COUNT;
 
 pub const V14_OPERATIONS: &[OperationSpec] = &[
@@ -26,6 +26,20 @@ pub const V14_OPERATIONS: &[OperationSpec] = &[
         &["matrix", "rhs"],
         "number[]",
         "solve a square linear system A*x=b using pivoted Gaussian elimination",
+    ),
+    op(
+        "alg.proportion",
+        &["proportion", "solve_proportion", "rule_of_three"],
+        &["a", "b", "c"],
+        "number",
+        "solve the proportion a/b = c/x for x",
+    ),
+    op(
+        "num.round_sigfig",
+        &["round_sigfig", "sigfig_round", "significant_figures"],
+        &["value", "sigfigs"],
+        "number",
+        "round a finite number to 1 through 15 significant figures",
     ),
 ];
 
@@ -99,6 +113,12 @@ const SEMANTIC_HINTS: &[(&str, &str)] = &[
     ("simultaneous equations", "linalg.solve"),
     ("solve linear system", "linalg.solve"),
     ("matrix solve", "linalg.solve"),
+    ("solve proportion", "alg.proportion"),
+    ("rule of three", "alg.proportion"),
+    ("ratio proportion", "alg.proportion"),
+    ("round significant figures", "num.round_sigfig"),
+    ("round to significant figures", "num.round_sigfig"),
+    ("significant figures", "num.round_sigfig"),
     ("quadratic equation", "alg.quadratic_roots"),
     ("solve quadratic", "alg.quadratic_roots"),
     ("greatest common divisor", "alg.gcd_many"),
@@ -194,12 +214,12 @@ pub fn search(query: &str, limit: usize) -> Vec<&'static OperationSpec> {
     // Preserve the mature v1.3 search path and ordering for ordinary queries.
     for spec in legacy::search(q, limit) { push_unique(&mut out, spec, limit); }
 
-    // Direct matching for the two v1.4 operations.
+    // Direct matching for v1.4 operations.
     for (_, spec) in v14_direct_matches(q) { push_unique(&mut out, spec, limit); }
 
     // Last-resort token matching lets agents use short natural-language phrases
-    // such as "quadratic equation" even when those words are not contiguous in
-    // an opcode/summary. Require all tokens to avoid noisy one-word matches.
+    // even when those words are not contiguous in an opcode/summary. Require
+    // all tokens to avoid noisy one-word matches.
     if q_tokens.len() >= 2 && out.len() < limit {
         let mut fallback = OPERATIONS
             .iter()
@@ -214,13 +234,13 @@ pub fn search(query: &str, limit: usize) -> Vec<&'static OperationSpec> {
 }
 
 pub fn capability_code(opcode: &str) -> &'static str {
-    if matches!(opcode, "alg.linear_root" | "linalg.solve") { "d" }
+    if matches!(opcode, "alg.linear_root" | "linalg.solve" | "alg.proportion" | "num.round_sigfig") { "d" }
     else { legacy::capability_code(opcode) }
 }
 
 pub fn cost_code(opcode: &str) -> &'static str {
     match opcode {
-        "alg.linear_root" => "1",
+        "alg.linear_root" | "alg.proportion" | "num.round_sigfig" => "1",
         "linalg.solve" => "h",
         _ => legacy::cost_code(opcode),
     }
@@ -234,8 +254,8 @@ mod tests {
     fn aggregate_count_is_explicit() {
         assert_eq!(legacy::OPERATIONS.len(), V13_BUILTIN_COUNT);
         assert_eq!(V14_OPERATIONS.len(), V14_MATH_COUNT);
-        assert_eq!(OPERATIONS.len(), 1427);
-        assert_eq!(OPERATIONS.iter().count(), 1427);
+        assert_eq!(OPERATIONS.len(), 1429);
+        assert_eq!(OPERATIONS.iter().count(), 1429);
     }
 
     #[test]
@@ -249,12 +269,16 @@ mod tests {
     fn new_math_aliases_resolve() {
         assert_eq!(resolve("linear_equation").unwrap().opcode, "alg.linear_root");
         assert_eq!(resolve("matrix_solve").unwrap().opcode, "linalg.solve");
+        assert_eq!(resolve("rule_of_three").unwrap().opcode, "alg.proportion");
+        assert_eq!(resolve("sigfig_round").unwrap().opcode, "num.round_sigfig");
     }
 
     #[test]
     fn natural_language_search_maps_to_useful_operations() {
         assert_eq!(search("solve linear equation", 5)[0].opcode, "alg.linear_root");
         assert_eq!(search("system of equations", 5)[0].opcode, "linalg.solve");
+        assert_eq!(search("solve proportion", 5)[0].opcode, "alg.proportion");
+        assert_eq!(search("round to significant figures", 5)[0].opcode, "num.round_sigfig");
         assert_eq!(search("quadratic equation", 5)[0].opcode, "alg.quadratic_roots");
         assert_eq!(search("greatest common divisor", 5)[0].opcode, "alg.gcd_many");
         assert_eq!(search("matrix inverse", 5)[0].opcode, "mat.inverse");
