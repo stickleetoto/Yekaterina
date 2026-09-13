@@ -23,7 +23,7 @@ jobs:
 
       # v1.4 is additive over the frozen v1.3 release layer. The v1.4 audit
       # preserves the v1.2 integrity baseline, pins the final v1.3 shim files,
-      # and verifies the 1,427-op aggregate surface plus unchanged 3-tool MCP.
+      # and verifies the 1,429-op aggregate surface plus unchanged 3-tool MCP.
       - run: python scripts/static_audit_v14.py
       - run: python scripts/lexical_rust_audit.py
       - run: python scripts/operation_manifest_v14.py
@@ -40,7 +40,7 @@ jobs:
       # Existing three-tool MCP demo and v1.3 transformer runtime gate stay live.
       - run: python tools/demo.py ./target/release/yekaterina
       - run: python scripts/verify_v13_transformer_runtime.py ./target/release/yekaterina
-      # v1.4 gate: new equation solvers plus natural-language yk.find ranking.
+      # v1.4 gate: additive common math plus natural-language yk.find ranking.
       - run: python scripts/verify_v14_math_agent_runtime.py ./target/release/yekaterina
 
       # Frozen v1.2 reference/acceptance suite remains a regression layer.
