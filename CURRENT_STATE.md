@@ -1,12 +1,12 @@
 # CURRENT_STATE.md
 
-> Active development snapshot for `stickleetoto/Yekaterina-Dev`.
+> Active development snapshot for `stickleetoto/Yekaterina` on the v1.4 development line.
 
 ## Current milestone
 
 **Yekaterina v1.4 development is open with a focused Core Math + Agent Usability scope.**
 
-The stable distribution `stickleetoto/Yekaterina` is now **v1.3.0**. v1.4 development is additive over that released 1,425-operation baseline and deliberately avoids rewriting the frozen v1.2/v1.3 registry and engine layers.
+The stable distribution is **v1.3.0**. v1.4 development is additive over that released 1,425-operation baseline and deliberately avoids rewriting the frozen v1.2/v1.3 registry and engine layers.
 
 | | |
 |---|---|
@@ -15,8 +15,8 @@ The stable distribution `stickleetoto/Yekaterina` is now **v1.3.0**. v1.4 develo
 | Development package metadata | `1.3.0` until explicit v1.4 promotion |
 | Advertised MCP initialize version | `1.0.0` (compatibility-gated) |
 | v1.3 released built-in/control operations | **1,425** |
-| v1.4 current built-in/control operations | **1,427** |
-| v1.4 new math operations | **2** |
+| v1.4 current built-in/control operations | **1,429** |
+| v1.4 new math operations | **4** |
 | Native transformer operations retained | **15** |
 | MCP tools | **3** — `yk.compute`, `yk.find`, `yk.spec` |
 | Golden corpus | **527/527** regression gate retained |
@@ -24,23 +24,30 @@ The stable distribution `stickleetoto/Yekaterina` is now **v1.3.0**. v1.4 develo
 | Rust edition / toolchain | 2024 / pinned 1.98.0 |
 | Default workers | 1 |
 
-## v1.4 first slice
+## v1.4 slice 1 — equations
 
 ### Core Math
 
 - `alg.linear_root(a, b)` — solves `a*x + b = 0`, returning `DOMAIN` when `a == 0`.
 - `linalg.solve(matrix, rhs)` — solves non-singular square linear systems up to the bounded implementation limit using partial pivoting; singular systems return `DOMAIN`.
 
-These are deliberately high-leverage operations rather than broad family expansion.
+## v1.4 slice 2 — common math
 
-### Agent Usability
+- `alg.proportion(a, b, c)` — solves the common proportion `a/b = c/x`; `a == 0` returns `DOMAIN`.
+- `num.round_sigfig(value, sigfigs)` — rounds finite numeric input to 1–15 significant figures; invalid significant-figure counts are rejected deterministically.
+
+The second slice intentionally targets common calculator/spreadsheet work rather than increasing operation count for its own sake.
+
+## Agent Usability
 
 `yk.find` keeps the same MCP request/response schema but gains an additive semantic discovery layer. Exact canonical names and existing aliases remain strongest, then common natural-language intents can bridge to existing or new operations.
 
-Initial intent examples include:
+Current intent examples include:
 
 - `solve linear equation` -> `alg.linear_root`
 - `system of equations` -> `linalg.solve`
+- `solve proportion` / `rule of three` -> `alg.proportion`
+- `round to significant figures` -> `num.round_sigfig`
 - `quadratic equation` -> `alg.quadratic_roots`
 - `greatest common divisor` -> `alg.gcd_many`
 - `matrix inverse` -> `mat.inverse`
@@ -51,7 +58,7 @@ No fourth MCP tool is introduced.
 
 - `src/registry.rs` / `src/engine.rs` — frozen v1.2 baseline, 1,410 operations.
 - `src/registry_v13.rs` / `src/engine_v13.rs` — frozen v1.3 layer, 1,425 operations.
-- `src/registry_v14.rs` / `src/engine_v14.rs` — active v1.4 aggregate layer, currently 1,427 operations.
+- `src/registry_v14.rs` / `src/engine_v14.rs` — active v1.4 aggregate layer, currently 1,429 operations.
 - `src/math_v14.rs` — v1.4-only math implementation.
 
 `src/lib.rs` exposes v1.2 and v1.3 as explicit historical modules and routes the live `registry` / `engine` surface through v1.4.
@@ -61,7 +68,7 @@ No fourth MCP tool is introduced.
 The active v1.4 branch must pass all of the following before merge:
 
 - v1.4 static audit, including v1.2 integrity preservation and final-v1.3 layer pins;
-- aggregate **1,427 unique-op** manifest check;
+- aggregate **1,429 unique-op** manifest check;
 - `cargo test --locked --all-targets`;
 - `cargo clippy --locked --all-targets`;
 - locked release build;
@@ -75,4 +82,6 @@ The active v1.4 branch must pass all of the following before merge:
 
 ## Scope discipline
 
-The current slice does **not** change the MCP schema, release metadata, error vocabulary, worker defaults, transformer behavior, or persistent UDO model. Larger math-family expansion and broader semantic discovery should only follow after this first slice passes end-to-end verification.
+This slice does **not** change the MCP schema, release metadata, error vocabulary, worker defaults, transformer behavior, persistent UDO model, or frozen v1.2/v1.3 implementation layers.
+
+Before adding further v1.4 operations, the roadmap should be compared against the existing 1,410-op baseline so already-covered functionality is not duplicated.
