@@ -1,9 +1,11 @@
 {
   "version": "v1.4-dev",
   "registry_status": "registered",
-  "count": 2,
+  "count": 4,
   "opcodes": [
     "alg.linear_root",
-    "linalg.solve"
+    "linalg.solve",
+    "alg.proportion",
+    "num.round_sigfig"
   ]
 }
