@@ -2,7 +2,7 @@
 
 Active source-development branch for Yekaterina.
 
-This branch is the successor to the former `stickleetoto/Yekaterina-Dev` repository. The former repository is retained as migration provenance while the consolidated layout is validated.
+This branch is the successor to the former `stickleetoto/Yekaterina-Dev` repository. The former repository is archived and retained as migration provenance / rollback history.
 
 ## Repository layout
 
@@ -14,9 +14,9 @@ This branch is the successor to the former `stickleetoto/Yekaterina-Dev` reposit
 ## Status
 
 - Development package metadata remains **1.3.0** until an explicit v1.4 release-promotion phase.
-- Live v1.4 built-in/control operation surface: **1,427 operations**.
+- Live v1.4 built-in/control operation surface: **1,429 operations**.
 - v1.3 baseline retained: **1,425 operations**, including **15** native `xfmr.*` operations.
-- v1.4 additions in the first slice: **2** focused equation-solving operations.
+- v1.4 additive math layer: **4 operations** across two focused slices.
 - MCP tools remain exactly **3**: `yk.compute`, `yk.find`, `yk.spec`.
 - Golden regression corpus: **527/527** retained.
 - Frozen v1.2 full-capability audit surface: **1,410/1,410** retained.
@@ -29,13 +29,17 @@ v1.4 is intentionally not an opcode-count race. The line has two goals:
 1. **Core Math** — add small, high-leverage deterministic operations that remove common reasoning/calculation work from the LLM.
 2. **Agent Usability** — make existing capabilities easier to discover from natural-language intent without expanding the MCP tool schema.
 
-The first development slice adds:
+### Slice 1 — equations
 
 - `alg.linear_root(a, b)` — solve `a*x + b = 0`;
-- `linalg.solve(matrix, rhs)` — solve square linear systems with pivoted Gaussian elimination;
-- semantic `yk.find` intent bridges for phrases such as `solve linear equation`, `system of equations`, `quadratic equation`, `greatest common divisor`, and `matrix inverse`.
+- `linalg.solve(matrix, rhs)` — solve bounded square linear systems with pivoted Gaussian elimination.
 
-Exact canonical/alias ownership remains stronger than semantic ranking, so existing v1.3 lookups keep their deterministic behavior.
+### Slice 2 — common math
+
+- `alg.proportion(a, b, c)` — solve `a/b = c/x` for `x` (the common rule-of-three calculation);
+- `num.round_sigfig(value, sigfigs)` — round finite numbers to **1–15 significant figures**.
+
+`yk.find` includes additive natural-language bridges such as `solve proportion`, `rule of three`, and `round to significant figures`. Exact canonical/alias ownership remains stronger than semantic ranking, preserving v1.3 behavior.
 
 ## Additive architecture
 
@@ -53,7 +57,7 @@ This keeps release evidence separable while allowing the live runtime to move fo
 The v1.4 CI path requires:
 
 - `scripts/static_audit_v14.py`;
-- aggregate operation manifest: **1,427 total**;
+- aggregate operation manifest: **1,429 total**;
 - locked Rust tests, clippy, and release build;
 - unchanged three-tool MCP demo;
 - retained v1.3 transformer runtime verification;
