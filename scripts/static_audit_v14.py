@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 V12_COUNT = 1410
 V13_COUNT = 15
-V14_COUNT = 2
+V14_COUNT = 4
 TOTAL_COUNT = V12_COUNT + V13_COUNT + V14_COUNT
 EXPECTED_DEV_PACKAGE_VERSION = "1.3.0"
 EXPECTED_TOOLS = ["yk.compute", "yk.find", "yk.spec"]
@@ -143,17 +143,17 @@ def main() -> int:
     v14_registry = (ROOT / "src" / "registry_v14.rs").read_text(encoding="utf-8")
     registered_v14 = re.findall(r'^\s*op\(\s*\n?\s*"([^"]+)"', v14_registry, re.M)
     if v14_manifest.get("count") != V14_COUNT or v14_manifest.get("registry_status") != "registered":
-        fail("v1.4 math manifest is not exactly two registered operations")
+        fail("v1.4 math manifest is not exactly four registered operations")
     elif v14_ops != registered_v14:
         fail(f"v1.4 registry specs do not match manifest order: {registered_v14}")
     else:
-        ok("v1.4 math layer is exactly two registered operations")
+        ok("v1.4 math layer is exactly four registered operations")
 
     all_ops = v12_ops + v13_ops + v14_ops
     if len(all_ops) != TOTAL_COUNT or len(set(all_ops)) != TOTAL_COUNT:
-        fail("v1.4 aggregate registry names are not 1427 unique operations")
+        fail("v1.4 aggregate registry names are not 1429 unique operations")
     else:
-        ok("v1.4 aggregate registry is 1427 unique operations")
+        ok("v1.4 aggregate registry is 1429 unique operations")
 
     if "pub const BUILTIN_COUNT: usize = V13_BUILTIN_COUNT + V14_MATH_COUNT;" not in v14_registry:
         fail("registry_v14 aggregate count expression missing")
@@ -177,7 +177,8 @@ def main() -> int:
         ok("v1.4 additive registry/engine/math wiring present")
 
     dispatch = (ROOT / "src" / "engine_v14.rs").read_text(encoding="utf-8")
-    missing_dispatch = [op for op in v14_ops if f'"{op}"' not in dispatch and f'"{op}"' not in (ROOT / "src" / "math_v14.rs").read_text(encoding="utf-8")]
+    math_impl = (ROOT / "src" / "math_v14.rs").read_text(encoding="utf-8")
+    missing_dispatch = [op for op in v14_ops if f'"{op}"' not in dispatch and f'"{op}"' not in math_impl]
     if missing_dispatch:
         fail(f"v1.4 dispatch is missing operations: {missing_dispatch}")
     else:
@@ -188,11 +189,17 @@ def main() -> int:
     )
     fixtures = fixture_doc.get("fixtures", {})
     if fixture_doc.get("count") != V14_COUNT or set(fixtures) != set(v14_ops):
-        fail("v1.4 runtime fixtures do not cover exactly the two new math operations")
+        fail("v1.4 runtime fixtures do not cover exactly the four new math operations")
     else:
-        ok("v1.4 runtime fixtures cover both new math operations")
+        ok("v1.4 runtime fixtures cover all four new math operations")
 
-    for phrase in ["solve linear equation", "system of equations", "quadratic equation"]:
+    for phrase in [
+        "solve linear equation",
+        "system of equations",
+        "solve proportion",
+        "round to significant figures",
+        "quadratic equation",
+    ]:
         if phrase not in v14_registry:
             fail(f"agent discovery hint missing: {phrase}")
         else:
