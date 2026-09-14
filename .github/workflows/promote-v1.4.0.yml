@@ -1,0 +1,67 @@
+name: promote-v1.4.0
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'releases/v1.4.0/SOURCE_PROVENANCE.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout stable distribution repository
+        uses: actions/checkout@v4
+        with:
+          path: stable
+
+      - name: Checkout verified v1.4.0 source
+        uses: actions/checkout@v4
+        with:
+          repository: stickleetoto/Yekaterina
+          ref: 984ead119308155c5c58bd552d6004989403b1ec
+          path: devsrc
+
+      - name: Install pinned Rust toolchain
+        uses: dtolnay/rust-toolchain@1.98.0
+
+      - name: Build locked Windows release binary
+        shell: pwsh
+        run: cargo build --locked --release --manifest-path devsrc/Cargo.toml
+
+      - name: Run MCP showcase demo
+        shell: cmd
+        run: devsrc\DEMO_WINDOWS.bat devsrc\target\release\yekaterina.exe
+
+      - name: Run stable distribution smoke test
+        shell: cmd
+        working-directory: stable
+        run: SMOKE_TEST_WINDOWS.bat ..\devsrc\target\release\yekaterina.exe
+
+      - name: Build stable distribution archive
+        shell: pwsh
+        working-directory: stable
+        run: .\tools\MAKE_WINDOWS_RELEASE.ps1 -ExePath ..\devsrc\target\release\yekaterina.exe -CargoProjectPath ..\devsrc -Version 1.4.0 -OutDir .\release_build
+
+      - name: Verify archive checksum
+        shell: pwsh
+        working-directory: stable
+        run: |
+          $zip = '.\release_build\Yekaterina_v1.4.0_windows-x64.zip'
+          $sum = "$zip.sha256.txt"
+          $expected = ((Get-Content $sum -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
+          $actual = (Get-FileHash -Algorithm SHA256 $zip).Hash.ToLowerInvariant()
+          if ($expected -ne $actual) { throw "ZIP checksum mismatch" }
+
+      - name: Preserve release package as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Yekaterina-v1.4.0-windows-x64
+          path: |
+            stable/release_build/Yekaterina_v1.4.0_windows-x64.zip
+            stable/release_build/Yekaterina_v1.4.0_windows-x64.zip.sha256.txt
