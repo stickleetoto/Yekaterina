@@ -1,87 +1,78 @@
 # CURRENT_STATE.md
 
-> Active development snapshot for `stickleetoto/Yekaterina` on the v1.4 development line.
+> Release-candidate snapshot for Yekaterina v1.4.
 
 ## Current milestone
 
-**Yekaterina v1.4 development is open with a focused Core Math + Agent Usability scope.**
+**Yekaterina v1.4 feature work is frozen and the project is in Free release finalization.**
 
-The stable distribution is **v1.3.0**. v1.4 development is additive over that released 1,425-operation baseline and deliberately avoids rewriting the frozen v1.2/v1.3 registry and engine layers.
+The published stable line is v1.3.0. The v1.4 candidate remains additive over the released 1,425-operation baseline and preserves the frozen v1.2/v1.3 implementation layers.
 
-| | |
+| Item | State |
 |---|---|
-| Stable distribution line | **1.3.0** |
-| Active development line | **v1.4 Core Math + Agent Usability** |
-| Development package metadata | `1.3.0` until explicit v1.4 promotion |
-| Advertised MCP initialize version | `1.0.0` (compatibility-gated) |
-| v1.3 released built-in/control operations | **1,425** |
-| v1.4 current built-in/control operations | **1,429** |
-| v1.4 new math operations | **4** |
-| Native transformer operations retained | **15** |
+| Published stable | **v1.3.0** |
+| Candidate | **v1.4.0 Free** |
+| Current package metadata | `1.3.0` until explicit release promotion |
+| MCP initialize identity | `1.0.0` |
+| v1.4 operation target | **1,429** |
+| New v1.4 math operations | **4** |
 | MCP tools | **3** — `yk.compute`, `yk.find`, `yk.spec` |
-| Golden corpus | **527/527** regression gate retained |
-| Frozen v1.2 Full Capability Audit | **1,410/1,410** retained |
-| Rust edition / toolchain | 2024 / pinned 1.98.0 |
-| Default workers | 1 |
+| Golden gate | **527/527** |
+| Frozen v1.2 full audit | **1,410/1,410** |
+| Rust toolchain | 2024 / pinned 1.98.0 |
 
-## v1.4 slice 1 — equations
+## Product decision
 
-### Core Math
+- v1.4.0 is the durable free baseline.
+- v1.4.x becomes maintenance-oriented after release.
+- Later feature development moves to the next product line.
+- Operation count is not a release success metric.
 
-- `alg.linear_root(a, b)` — solves `a*x + b = 0`, returning `DOMAIN` when `a == 0`.
-- `linalg.solve(matrix, rhs)` — solves non-singular square linear systems up to the bounded implementation limit using partial pivoting; singular systems return `DOMAIN`.
+The compatibility promise is recorded in `docs/V14_FREE_COMPATIBILITY_CONTRACT.md`.
 
-## v1.4 slice 2 — common math
+## Final v1.4 capability delta
 
-- `alg.proportion(a, b, c)` — solves the common proportion `a/b = c/x`; `a == 0` returns `DOMAIN`.
-- `num.round_sigfig(value, sigfigs)` — rounds finite numeric input to 1–15 significant figures; invalid significant-figure counts are rejected deterministically.
+Core Math adds:
 
-The second slice intentionally targets common calculator/spreadsheet work rather than increasing operation count for its own sake.
+- `alg.linear_root(a, b)`
+- `linalg.solve(matrix, rhs)`
+- `alg.proportion(a, b, c)`
+- `num.round_sigfig(value, sigfigs)`
 
-## Agent Usability
+`yk.find` also gains semantic bridges for common requests such as linear equations, averages, standard deviation, percentage change, CAGR, matrix multiplication and numerical integration.
 
-`yk.find` keeps the same MCP request/response schema but gains an additive semantic discovery layer. Exact canonical names and existing aliases remain strongest, then common natural-language intents can bridge to existing or new operations.
-
-Current intent examples include:
-
-- `solve linear equation` -> `alg.linear_root`
-- `system of equations` -> `linalg.solve`
-- `solve proportion` / `rule of three` -> `alg.proportion`
-- `round to significant figures` -> `num.round_sigfig`
-- `quadratic equation` -> `alg.quadratic_roots`
-- `greatest common divisor` -> `alg.gcd_many`
-- `matrix inverse` -> `mat.inverse`
-
-No fourth MCP tool is introduced.
+Canonical operation identity and established aliases remain stronger than semantic hints. No fourth MCP tool is introduced.
 
 ## Layering
 
 - `src/registry.rs` / `src/engine.rs` — frozen v1.2 baseline, 1,410 operations.
-- `src/registry_v13.rs` / `src/engine_v13.rs` — frozen v1.3 layer, 1,425 operations.
-- `src/registry_v14.rs` / `src/engine_v14.rs` — active v1.4 aggregate layer, currently 1,429 operations.
+- `src/registry_v13.rs` / `src/engine_v13.rs` — frozen v1.3 aggregate layer, 1,425 operations.
+- `src/registry_v14.rs` / `src/engine_v14.rs` — v1.4 aggregate layer, 1,429 operations.
 - `src/math_v14.rs` — v1.4-only math implementation.
 
-`src/lib.rs` exposes v1.2 and v1.3 as explicit historical modules and routes the live `registry` / `engine` surface through v1.4.
+## Release gate
 
-## Verification contract
+The exact v1.4.0 candidate must pass:
 
-The active v1.4 branch must pass all of the following before merge:
+- v1.4 static audit;
+- 1,429-operation manifest validation;
+- locked Rust tests, clippy and release build;
+- MCP showcase demo;
+- v1.3 transformer runtime verification;
+- v1.4 math + semantic-discovery runtime verification;
+- retained v1.2 operation/statistics/multiplicity verifiers;
+- Golden 527/527;
+- frozen v1.2 Full Capability Audit 1410/1410 strict;
+- benchmark invariants;
+- packaged-binary smoke test before publication.
 
-- v1.4 static audit, including v1.2 integrity preservation and final-v1.3 layer pins;
-- aggregate **1,429 unique-op** manifest check;
-- `cargo test --locked --all-targets`;
-- `cargo clippy --locked --all-targets`;
-- locked release build;
-- unchanged MCP showcase demo;
-- retained v1.3 transformer runtime verifier;
-- v1.4 math + natural-language discovery real-process verifier;
-- v1.2 independent operation/statistics/multiplicity verifiers;
-- Golden **527/527** regression;
-- frozen v1.2 Full Capability Audit **1,410/1,410** under strict mode;
-- benchmark invariants.
+## Remaining release work
 
-## Scope discipline
+1. Finalize release-facing documentation and release notes.
+2. Promote Cargo package and lock metadata together to `1.4.0`.
+3. Update the v1.4 static audit to final-release version gating.
+4. Run the complete release gate on the exact promoted source.
+5. Produce and smoke-test the Windows x64 package and SHA-256 checksum.
+6. Promote the verified candidate and record the exact v1.4 boundary commit/tag.
 
-This slice does **not** change the MCP schema, release metadata, error vocabulary, worker defaults, transformer behavior, persistent UDO model, or frozen v1.2/v1.3 implementation layers.
-
-Before adding further v1.4 operations, the roadmap should be compared against the existing 1,410-op baseline so already-covered functionality is not duplicated.
+No new v1.4 feature should be added merely to increase the operation count.
