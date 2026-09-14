@@ -127,6 +127,22 @@ const SEMANTIC_HINTS: &[(&str, &str)] = &[
     ("matrix inverse", "mat.inverse"),
     ("invert matrix", "mat.inverse"),
     ("matrix determinant", "mat.det"),
+    ("calculate average", "stat.mean"),
+    ("average of numbers", "stat.mean"),
+    ("arithmetic mean", "stat.mean"),
+    ("calculate median", "stat.median"),
+    ("standard deviation", "stat.std"),
+    ("correlation coefficient", "stat.correlation"),
+    ("percentage change", "pct.change"),
+    ("percent increase", "pct.increase"),
+    ("percent decrease", "pct.decrease"),
+    ("compound annual growth rate", "fin.cagr"),
+    ("loan payment", "fin.loan_payment"),
+    ("linear interpolation", "math.lerp"),
+    ("matrix multiplication", "mat.mul"),
+    ("matrix rank", "mat.rank"),
+    ("numerical integration", "num.integrate"),
+    ("bisection root", "num.bisect"),
 ];
 
 fn tokens(text: &str) -> Vec<String> {
@@ -282,5 +298,17 @@ mod tests {
         assert_eq!(search("quadratic equation", 5)[0].opcode, "alg.quadratic_roots");
         assert_eq!(search("greatest common divisor", 5)[0].opcode, "alg.gcd_many");
         assert_eq!(search("matrix inverse", 5)[0].opcode, "mat.inverse");
+        assert_eq!(search("calculate the average", 5)[0].opcode, "stat.mean");
+        assert_eq!(search("standard deviation", 5)[0].opcode, "stat.std");
+        assert_eq!(search("correlation coefficient", 5)[0].opcode, "stat.correlation");
+        assert_eq!(search("percentage change", 5)[0].opcode, "pct.change");
+        assert_eq!(search("increase by percent", 5)[0].opcode, "pct.increase");
+        assert_eq!(search("compound annual growth rate", 5)[0].opcode, "fin.cagr");
+        assert_eq!(search("monthly loan payment", 5)[0].opcode, "fin.loan_payment");
+        assert_eq!(search("linear interpolation", 5)[0].opcode, "math.lerp");
+        assert_eq!(search("matrix multiplication", 5)[0].opcode, "mat.mul");
+        assert_eq!(search("matrix rank", 5)[0].opcode, "mat.rank");
+        assert_eq!(search("numerical integration", 5)[0].opcode, "num.integrate");
+        assert_eq!(search("bisection root", 5)[0].opcode, "num.bisect");
     }
 }

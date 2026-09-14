@@ -113,6 +113,21 @@ def main() -> int:
             "quadratic equation": "alg.quadratic_roots",
             "greatest common divisor": "alg.gcd_many",
             "matrix inverse": "mat.inverse",
+            "calculate the average": "stat.mean",
+            "average of numbers": "stat.mean",
+            "calculate median": "stat.median",
+            "standard deviation": "stat.std",
+            "correlation coefficient": "stat.correlation",
+            "percentage change": "pct.change",
+            "increase by percent": "pct.increase",
+            "decrease by percent": "pct.decrease",
+            "compound annual growth rate": "fin.cagr",
+            "monthly loan payment": "fin.loan_payment",
+            "linear interpolation": "math.lerp",
+            "matrix multiplication": "mat.mul",
+            "matrix rank": "mat.rank",
+            "numerical integration": "num.integrate",
+            "bisection root": "num.bisect",
         }
         for query, expected in expected_search.items():
             actual = first_hit(client, query)
