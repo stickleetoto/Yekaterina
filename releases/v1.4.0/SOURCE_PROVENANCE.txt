@@ -1,0 +1,19 @@
+Yekaterina v1.4.0 Free stable promotion source
+
+Development repository: stickleetoto/Yekaterina
+Source commit: 984ead119308155c5c58bd552d6004989403b1ec
+Source branch: release/v1.4.0-rc
+Public v1.4 merge commit: d22717771e8c8ccc870fc721f07906cea122965e
+Source CI run: 34797062990
+Source CI: completed / success
+Golden regression: 527/527
+Frozen v1.2 Full Capability Audit: 1410/1410 --strict
+Aggregate operation count: 1429
+Native transformer operation count retained: 15
+v1.4 Core Math additions: 4
+MCP tools: 3
+MCP schema footprint: 412 tokens / 1725 bytes
+Package version: 1.4.0
+MCP advertised version: 1.0.0
+Public feature-development boundary: v1.4.0
+Post-v1.4 feature development: private commercial line
