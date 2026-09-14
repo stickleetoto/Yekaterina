@@ -10,7 +10,7 @@ V12_COUNT = 1410
 V13_COUNT = 15
 V14_COUNT = 4
 TOTAL_COUNT = V12_COUNT + V13_COUNT + V14_COUNT
-EXPECTED_DEV_PACKAGE_VERSION = "1.3.0"
+EXPECTED_DEV_PACKAGE_VERSION = "1.4.0"
 EXPECTED_TOOLS = ["yk.compute", "yk.find", "yk.spec"]
 
 # Git blob ids from the final v1.3.0 development release commit. v1.4 is
@@ -85,14 +85,13 @@ def main() -> int:
         else:
             ok(f"frozen v1.3 layer artifact preserved: {rel}")
 
-    # Early v1.4 development intentionally retains 1.3.0 package metadata so
-    # the release version is not promoted before the feature line is accepted.
+    # Final v1.4 release metadata is pinned to 1.4.0 for the free baseline.
     cargo_toml = (ROOT / "Cargo.toml").read_text(encoding="utf-8")
     package_version = re.search(r'^\s*version\s*=\s*"([^"]+)"', cargo_toml, re.M)
     if package_version is None or package_version.group(1) != EXPECTED_DEV_PACKAGE_VERSION:
-        fail("v1.4 dev branch unexpectedly changed Cargo.toml release metadata")
+        fail("v1.4 release Cargo.toml metadata is not 1.4.0")
     else:
-        ok("v1.4 dev branch keeps package metadata at 1.3.0 until promotion")
+        ok("v1.4 release package metadata is pinned to 1.4.0")
 
     cargo_lock = (ROOT / "Cargo.lock").read_text(encoding="utf-8")
     locked_version = re.search(
@@ -101,9 +100,9 @@ def main() -> int:
         re.M,
     )
     if locked_version is None or locked_version.group(1) != EXPECTED_DEV_PACKAGE_VERSION:
-        fail("v1.4 dev branch unexpectedly changed Cargo.lock release metadata")
+        fail("v1.4 release Cargo.lock metadata is not 1.4.0")
     else:
-        ok("Cargo.lock remains synchronized with the dev package metadata")
+        ok("Cargo.lock is synchronized with v1.4.0 package metadata")
 
     legacy_manifest = json.loads(
         (ROOT / "full_audit" / "opcodes_alpha12.json").read_text(encoding="utf-8-sig")
