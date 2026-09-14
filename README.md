@@ -2,56 +2,24 @@
 
 **Pure computation. Minimal tokens. Verified evolution.**
 
-Yekaterina is a compute engine for LLM agents over MCP, designed to keep the model-facing interface small while the internal deterministic computation layer grows.
+Yekaterina is a deterministic compute engine for LLM agents over MCP. It keeps the model-facing interface small while exposing a large verified operation registry behind exactly three tools.
 
-This repository is the **stable distribution, documentation, and active development home** for Yekaterina.
+## Stable release
 
-- Stable distribution: **v1.3.0** on `main`
-- Active source development: [`dev/v1.4`](https://github.com/stickleetoto/Yekaterina/tree/dev/v1.4)
-- Stable MCP surface: **3 tools**
-- Stable operation set: **1,425 operations**
-- MCP schema footprint: **412 tokens / 1,725 bytes**
+**Yekaterina v1.4.0 Free** is the final public feature-development baseline.
 
-> Official stable binaries distributed from `main` are governed by `LICENSE.txt`. Development source on `dev/v1.4` is distributed under the Apache License 2.0 in that branch's `LICENSE` file. Branches intentionally have different distribution terms.
-
-## Yekaterina v1.3.0
-
-v1.3.0 promotes the verified transformer-native expansion to stable while preserving the compact MCP interface and the complete v1.2 baseline.
-
-| Metric | v1.3.0 |
+| Metric | v1.4.0 Free |
 |---|---:|
-| Registered built-in/control operations | **1,425** |
-| Native transformer operations | **15** |
-| Exposed MCP tools | **3** |
+| Built-in/control operations | **1,429** |
+| MCP tools | **3** |
 | MCP schema footprint | **412 tokens / 1,725 bytes** |
-| Golden correctness corpus | **527/527** retained |
-| Frozen v1.2 Full Capability Audit | **1,410/1,410** retained |
-| Transformer runtime verification | **15-op surface verified** |
+| Golden regression corpus | **527/527** |
+| Frozen v1.2 Full Capability Audit | **1,410/1,410** |
 | Default workers | **1** |
-| Crate version | **1.3.0** |
-| MCP advertised version | **1.0.0** (deliberately frozen) |
+| Package version | **1.4.0** |
+| MCP advertised version | **1.0.0** (compatibility-gated) |
 
-The v1.3 release was originally promoted from the former `stickleetoto/Yekaterina-Dev` repository at commit `6955d707c63efccdcf721e8369462cea9ee8d965`. That provenance remains part of the release record; active development has since been consolidated into this repository.
-
-The v1.3 release preserves the frozen 1,410-operation v1.2 registry and engine as historical audit baselines, then exposes a live aggregate registry of 1,425 operations through v1.3 dispatch shims. The original v1.2 Full Capability Audit remains frozen evidence; the 15 new transformer-native operations are additionally exercised by the v1.3 real-process runtime verifier.
-
-## What's new in v1.3
-
-The stable operation set grows from **1,410 to 1,425** without increasing the three-tool MCP surface.
-
-The v1.3 line adds 15 native `xfmr.*` operations covering:
-
-- material, interpolation, thermal and basic geometry calculations;
-- winding field, leakage and AC-loss calculations;
-- deterministic candidate evaluation and ranking with explicit constraint evidence.
-
-The implementation deliberately keeps the historical v1.2 registry and engine frozen. The v1.3 aggregate registry and dispatch layers add the transformer-native surface while delegating every legacy operation to the proven baseline.
-
-Caller-supplied limits and objective bands are policy data. Registry promotion does not imply IEC/IEEE/DOE certification or factory-design approval.
-
-## MCP surface
-
-Yekaterina exposes exactly three MCP tools:
+The three MCP tools remain:
 
 - `yk.find` — discover operations lazily
 - `yk.spec` — inspect a selected operation
@@ -59,69 +27,87 @@ Yekaterina exposes exactly three MCP tools:
 
 The design rule remains:
 
-> Internal capability may grow without casually expanding the LLM-facing schema.
+> Capability may grow without expanding the model-visible tool surface.
 
-Operation discovery stays out of `tools/list`, so the registry can grow without forcing every operation into the model-visible tool schema.
+## What changed in v1.4
 
-## Verification evidence
+v1.4 adds four focused Core Math operations while prioritizing agent discoverability over opcode-count growth:
 
-The source promoted to v1.3.0 completed the finalization CI on the exact promoted development commit:
+- `alg.linear_root(a, b)`
+- `linalg.solve(matrix, rhs)`
+- `alg.proportion(a, b, c)`
+- `num.round_sigfig(value, sigfigs)`
+
+`yk.find` also gains semantic bridges for common natural-language requests such as statistics, percentage calculations, finance, matrix operations, interpolation, and numerical methods. Canonical operation names and established aliases remain stronger than semantic hints.
+
+The final v1.4 registry contains **1,429 unique operations** while the MCP surface remains exactly three tools.
+
+## Verification
+
+The public v1.4 source line is release-gated by:
 
 ```text
-static_audit_v13                         PASS
-aggregate operation manifest             1425 total / 15 xfmr
+static_audit_v14                         PASS
+aggregate operation manifest             1,429 unique operations
 cargo test --locked --all-targets         PASS
 cargo clippy --locked --all-targets       PASS
 cargo build --locked --release            PASS
 MCP showcase demo                         PASS
-transformer runtime verifier              PASS
-v1.2 independent operation verifier       PASS
-statistics reference verifier             PASS
-multiplicity reference verifier           PASS
-MCP Golden                                527/527
-frozen v1.2 Full Capability Audit          1410/1410 --strict
+v1.3 transformer runtime verifier         PASS
+v1.4 math + discovery verifier            PASS
+v1.2 independent reference verifiers      PASS
+Golden regression                         527/527
+frozen v1.2 Full Capability Audit          1,410/1,410 --strict
 benchmark invariants                       PASS
 ```
 
-The Windows stable package is built from the exact promoted source commit with the committed lockfile, run through the real MCP demo and stable smoke test, packaged with release/license/privacy and dependency-inventory material, and accompanied by a SHA-256 checksum.
+The Windows release pipeline builds from the exact recorded source commit, runs the MCP demo and stable-package smoke test, produces a Windows x64 ZIP, verifies its SHA-256 checksum, and publishes the immutable GitHub Release.
 
-See [v1.3.0 release notes](releases/v1.3.0/RELEASE_NOTES.md) for the promotion record.
+See [v1.4.0 release notes](releases/v1.4.0/RELEASE_NOTES.md).
 
-## Stable distribution vs development
+## Public/free boundary
 
-Yekaterina now uses one public repository with branch-separated roles:
+v1.4.0 closes the public feature-development line.
 
 ```text
-stickleetoto/Yekaterina
-    ├─ main
-    │   └─ stable binaries, documentation, release evidence and issue tracking
-    └─ dev/v1.4
-        └─ Rust source development, optimization, verification and release preparation
+v1.4.x
+  public free baseline
+  correctness / security / compatibility maintenance only
+
+v1.5+
+  private commercial development
 ```
 
-Development changes are promoted from the development branch only after regression, compatibility and capability gates are checked against the frozen baselines. The former `stickleetoto/Yekaterina-Dev` repository is retained as migration provenance while the consolidated layout is validated.
+The public repository remains the distribution, documentation, issue-tracking, and free-line maintenance home. Proprietary post-v1.4 implementation source is developed separately.
 
 ## Download
 
 Official stable binaries are distributed through **GitHub Releases**.
 
-Download `Yekaterina_v1.3.0_windows-x64.zip` together with its `.sha256.txt` file, verify the checksum, then point your stdio-capable MCP client at `yekaterina.exe`.
+Download:
+
+```text
+Yekaterina_v1.4.0_windows-x64.zip
+Yekaterina_v1.4.0_windows-x64.zip.sha256.txt
+```
+
+Verify the checksum, extract the archive, and point a stdio-capable MCP client at `yekaterina.exe`.
 
 See [Installation](docs/INSTALLATION.md) and [MCP Setup](docs/MCP_SETUP.md).
 
 ## Compatibility
 
-The MCP request-schema surface remains compatible with the frozen v1.0.0 line. The server's MCP `initialize` response still advertises `1.0.0` deliberately; crate/release versioning can evolve without silently changing what existing MCP clients observe.
+v1.4 preserves the compact MCP contract established by earlier stable lines. Existing canonical IDs in the final v1.4 manifest remain stable across v1.4.x maintenance releases, and semantic-discovery improvements must not silently rewrite execution semantics.
 
-Every v1.2 canonical operation remains present in its original order. The default worker count remains 1 and parallel batch execution remains opt-in.
+The MCP `initialize` version remains deliberately compatibility-gated at `1.0.0`; product/package versioning is not automatically exposed as an MCP protocol-surface change.
 
 ## License
 
-The official Yekaterina Core binary distributed from `main` is provided under the [Yekaterina Freeware License v1.0](LICENSE.txt).
+Official stable Yekaterina binaries are distributed under the [Yekaterina Freeware License v1.0](LICENSE.txt).
 
-Development source on [`dev/v1.4`](https://github.com/stickleetoto/Yekaterina/tree/dev/v1.4) is distributed under the Apache License 2.0 provided by that branch's `LICENSE` file. Do not assume the stable binary distribution and development source have identical distribution terms.
+The source that formed the public v1.4 line was published under the Apache License 2.0 on its development branch. That historical source license remains applicable to source already published under it. Post-v1.4 commercial source is not part of the public development line.
 
-Third-party components bundled in official binary releases retain their own licenses. Official release archives include the applicable component inventory and collected third-party license material.
+Third-party components retain their respective licenses.
 
 ## Security
 
