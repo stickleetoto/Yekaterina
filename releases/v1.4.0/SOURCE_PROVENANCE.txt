@@ -18,3 +18,4 @@ Package version: 1.4.0
 MCP advertised version: 1.0.0
 Public feature-development boundary: v1.4.0
 Post-v1.4 feature development: private commercial line
+GitHub Release publication: automated by promote-v1.4.0 workflow
